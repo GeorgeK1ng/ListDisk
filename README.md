@@ -31,3 +31,8 @@ This tool provides detailed information about connected physical disks, includin
 - **Compatible with Windows Preinstallation Environment (WinPE).**
 
 > **Note:** Use this utility with caution. Incorrect usage may affect data integrity.
+
+![image](https://github.com/GeorgeK1ng/ListDisk/assets/98261225/d4b15d0c-93e0-4d2a-8ad6-fbe4d5b972aa)
+
+
+![image](https://github.com/GeorgeK1ng/ListDisk/assets/98261225/ef8456e9-7a1c-4d60-aa45-daf84ab18a6a)
