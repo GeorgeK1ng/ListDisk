@@ -25,4 +25,9 @@ This tool provides detailed information about connected physical disks, includin
 - `/settype 0 1 0x17` - Sets Partition 1 on Disk 0 to type NTFS Hidden (0x17).
 - `/settype 0 1 0x07` - Sets Partition 1 on Disk 0 to type NTFS (0x07).
 
+## Requirements
+- **Operating System:** Windows XP and newer.
+  - **Note for Windows XP Users:** This tool requires the installation of the Microsoft Visual C++ Redistributable. Please install it from [this link](https://github.com/abbodi1406/vcredist/releases/tag/v0.35.0).
+- **Compatible with Windows Preinstallation Environment (WinPE).**
+
 > **Note:** Use this utility with caution. Incorrect usage may affect data integrity.
