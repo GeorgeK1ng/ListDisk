@@ -29,10 +29,16 @@ This tool provides detailed information about connected physical disks, includin
 - **Operating System:** Windows XP and newer.
   - **Note for Windows XP Users:** This tool requires the installation of the Microsoft Visual C++ Redistributable. Please install it from [this link](https://github.com/abbodi1406/vcredist/releases/tag/v0.35.0).
 - **Compatible with Windows Preinstallation Environment (WinPE).**
+- **Place ListDisk in %WinDir%\system32 to make it easy accessible from commandline!**
+
 
 > **Note:** Use this utility with caution. Incorrect usage may affect data integrity.
 
-![image](https://github.com/GeorgeK1ng/ListDisk/assets/98261225/d4b15d0c-93e0-4d2a-8ad6-fbe4d5b972aa)
+![image](https://github.com/GeorgeK1ng/ListDisk/assets/98261225/bcdf04ba-070b-4ec3-846f-9b1a5fcbc8ed)
 
+![image](https://github.com/GeorgeK1ng/ListDisk/assets/98261225/af4299e5-412d-42e5-9cee-b111e785cc1b)
 
-![image](https://github.com/GeorgeK1ng/ListDisk/assets/98261225/ef8456e9-7a1c-4d60-aa45-daf84ab18a6a)
+![image](https://github.com/GeorgeK1ng/ListDisk/assets/98261225/b850d681-b6da-4bb3-88a8-29ad4c1fd104)
+
+![image](https://github.com/GeorgeK1ng/ListDisk/assets/98261225/038d9428-523d-4bb7-8e9d-c025e055a25e)
+
