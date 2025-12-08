@@ -809,7 +809,7 @@ bool UnMountPartitionByDriveLetter(const wchar_t* driveLetter) {
 // Function to unmount a partition if it is mounted, and return its drive letter if it was mounted
 std::wstring UnmountPartitionIfMounted(const std::vector<PartitionInfo>& partitions, DWORD diskNumber, DWORD partitionNumber) {
     // First, check if the partition is mounted by looking up the drive letter
-    std::wstring driveLetter = (partitions, diskNumber, partitionNumber);
+    std::wstring driveLetter = GetDriveLetter(partitions, diskNumber, partitionNumber);
 
     if (driveLetter.empty()) {
         // If no drive letter is found, the partition is likely not mounted
@@ -905,7 +905,7 @@ std::wstring IsPartitionAlreadyMounted(const std::vector<PartitionInfo>& partiti
 
 bool SetLabel(const std::vector<PartitionInfo>& partitions, DWORD diskNumber, DWORD partitionNumber, const std::wstring& newLabel) {
     // Retrieve the drive letter using your existing functions
-    std::wstring driveLetter = (partitions, diskNumber, partitionNumber);
+    std::wstring driveLetter = GetDriveLetter(partitions, diskNumber, partitionNumber);
 
     bool wasMounted = !driveLetter.empty();
     bool tempMount = false;
@@ -1463,4 +1463,5 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
 
