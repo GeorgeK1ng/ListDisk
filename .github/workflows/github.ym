@@ -1,0 +1,51 @@
+name: Build ListDisk
+
+on:
+  push:
+    branches: [ main, master, autobuild ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - configuration: "Release"
+            platform: "Win32"
+            archDir: "x86"
+
+          - configuration: "Release"
+            platform: "x64"
+            archDir: "x64"
+
+          - configuration: "Release XP"
+            platform: "Win32"
+            archDir: "x86"
+
+          - configuration: "Release XP"
+            platform: "x64"
+            archDir: "x64"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build ${{ matrix.configuration }} | ${{ matrix.platform }}
+        run: >
+          msbuild ListDisk.sln
+          /m
+          /p:Configuration="${{ matrix.configuration }}"
+          /p:Platform="${{ matrix.platform }}"
+          /p:PlatformToolset=v142
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ListDisk-${{ matrix.configuration }}-${{ matrix.platform }}
+          path: |
+            Release\${{ matrix.archDir }}\${{ matrix.configuration }}\ListDisk.exe
