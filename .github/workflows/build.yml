@@ -13,7 +13,7 @@ jobs:
       matrix:
         include:
           - configuration: "Release"
-            platform: "Win32"
+            platform: "x86"
             archDir: "x86"
 
           - configuration: "Release"
@@ -21,7 +21,7 @@ jobs:
             archDir: "x64"
 
           - configuration: "Release XP"
-            platform: "Win32"
+            platform: "x86"
             archDir: "x86"
 
           - configuration: "Release XP"
