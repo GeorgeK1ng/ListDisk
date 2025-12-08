@@ -265,9 +265,13 @@ std::vector<PartitionInfo> GetPartitionInfo() {
                         info.PartitionId = gptPartition.PartitionId;
                         info.GptAttributes = gptPartition.Attributes; // Store GPT attributes
 
-                        wchar_t gptNameArray[36] = {};
-                        wcscpy_s(gptNameArray, gptPartition.Name);
-                        info.GptName = std::wstring(gptNameArray);
+                        // Copy GPT name safely and trim trailing zeros
+                        info.GptName.assign(gptPartition.Name, gptPartition.Name + ARRAYSIZE(gptPartition.Name));
+                        
+                        // Remove trailing '\0' characters if any
+                        while (!info.GptName.empty() && info.GptName.back() == L'\0') {
+                            info.GptName.pop_back();
+                        }
 
                         if (IsEqualGUID(gptPartition.PartitionType, PARTITION_ESP_GUID))
                             info.PartitionType = L"EFI System";
@@ -392,6 +396,14 @@ std::vector<PartitionInfo> GetPartitionInfo() {
                             }
                         }
 
+                        // Example: Checking if the partition is read-only
+                        DWORD tmp = 0;
+                        if (!DeviceIoControl(hVolume, IOCTL_DISK_IS_WRITABLE, NULL, 0, NULL, 0, &tmp, NULL)) {
+                            if (GetLastError() == ERROR_WRITE_PROTECT) {
+                                info.ReadOnly = TRUE;
+                            }
+                        }
+                        
                         CloseHandle(hVolume);
                     }
 
@@ -447,9 +459,9 @@ std::vector<PartitionInfo> GetPartitionInfo() {
                     }
 
                     // Example: Checking if the partition is read-only
-                    if (!DeviceIoControl(hVolume, IOCTL_DISK_IS_WRITABLE, NULL, 0, NULL, 0, &bytesReturned, NULL)) {
-                        info.ReadOnly = true;
-                    }
+                    //if (!DeviceIoControl(hVolume, IOCTL_DISK_IS_WRITABLE, NULL, 0, NULL, 0, &bytesReturned, NULL)) {
+                    //    info.ReadOnly = true;
+                    //}
 
                     partitions.push_back(info);
                 }
@@ -797,7 +809,7 @@ bool UnMountPartitionByDriveLetter(const wchar_t* driveLetter) {
 // Function to unmount a partition if it is mounted, and return its drive letter if it was mounted
 std::wstring UnmountPartitionIfMounted(const std::vector<PartitionInfo>& partitions, DWORD diskNumber, DWORD partitionNumber) {
     // First, check if the partition is mounted by looking up the drive letter
-    std::wstring driveLetter = GetDriveLetter(partitions, diskNumber, partitionNumber);
+    std::wstring driveLetter = (partitions, diskNumber, partitionNumber);
 
     if (driveLetter.empty()) {
         // If no drive letter is found, the partition is likely not mounted
@@ -893,7 +905,7 @@ std::wstring IsPartitionAlreadyMounted(const std::vector<PartitionInfo>& partiti
 
 bool SetLabel(const std::vector<PartitionInfo>& partitions, DWORD diskNumber, DWORD partitionNumber, const std::wstring& newLabel) {
     // Retrieve the drive letter using your existing functions
-    std::wstring driveLetter = GetDriveLetter(partitions, diskNumber, partitionNumber);
+    std::wstring driveLetter = (partitions, diskNumber, partitionNumber);
 
     bool wasMounted = !driveLetter.empty();
     bool tempMount = false;
@@ -1328,7 +1340,7 @@ int main(int argc, char* argv[]) {
                 driveLetter += L":\\";
 
                 if (UnMountPartitionByDriveLetter(driveLetter.c_str())) {
-                    std::wcout << "Successuflly unmounted partition assigned to drive letter " << driveLetterChar << ":\\" << std::endl;
+                    std::wcout << "Successfully unmounted partition assigned to drive letter " << driveLetterChar << ":\\" << std::endl;
                 }
                 else {
                     std::wcout << "Failed to unmount partition assigned to drive letter " << driveLetterChar << ":\\" << std::endl;
@@ -1352,8 +1364,10 @@ int main(int argc, char* argv[]) {
         }
         else if (command == "/setactive") {
             if (argc < 4 || argc > 5) {
-                std::wcout << "  Usage: /settype <disk_number> <partition_number> <new_partition_type>\n";
-                std::wcout << "Example: /settype 0 1 0x17 - Sets Partition 1 on Disk 0 to NTFS Hidden (0x17).\n";
+                std::wcout << "  Usage: /setactive <disk_number> <partition_number> [active_flag_hex]\n";
+                std::wcout << "Example: /setactive 0 1      - Marks Partition 1 on Disk 0 as bootable (0x80).\n";
+                std::wcout << "Example: /setactive 0 1 80   - Explicitly sets boot flag to 0x80.\n";
+                std::wcout << "Example: /setactive 0 1 00   - Clears boot flag (0x00).\n";
                 return 1;
             }
 
@@ -1374,6 +1388,7 @@ int main(int argc, char* argv[]) {
             if (argc != 5) {
                 std::wcout <<   "Usage: /settype <disk_number> <partition_number> <new_partition_type>\n";
                 std::wcout << "Example: /settype 0 1 0x07 - Sets Partition 1 on Disk 0 to NTFS (0x07).\n";
+                std::wcout << "Example: /settype 0 1 0x17 - Sets Partition 1 on Disk 0 to NTFS Hidden (0x17).\n";
 
                 return 1;
             }
@@ -1448,3 +1463,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
